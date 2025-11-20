@@ -96,54 +96,54 @@ const WORDS = {
   attend: ['katılmak', 'devam etmek'],
   bullying: ['zorbalık'],
   buy: ['satın almak', 'almak'],
-  challenges: ['zorluklar', 'meydan okumalar', 'zorluk'],
+  challenges: ['zorluk', 'zorluklar', 'meydan okumalar'],
   chemistry: ['kimya'],
   childhood: ['çocukluk'],
-  'come across': ['rastlamak', 'karşılaşmak'],
+  'come across': ['karşılaşmak', 'rastlamak'],
   common: ['yaygın', 'ortak'],
   cummunication: ['iletişim', 'haberleşme'],
   courage: ['cesaret'],
   crowded: ['kalabalık'],
   crucial: ['çok önemli', 'hayati', 'kritik'],
   curiosity: ['merak'],
-  'cyber addiction': ['siber bağımlılık'],
+  'cyber addiction': ['sanal bağımlılığı', 'sanal bağımlı', 'sanal bağımlılık', 'siber bağımlılık'],
   'daily chares': ['günlük işler', 'günlük ev işleri', 'günlük görevler'],
   'declare war': ['savaş ilan etmek'],
-  determination: ['azim', 'kararlılık'],
+  determination: ['kararlılık', 'azim'],
   develop: ['geliştirmek', 'gelişmek'],
   die: ['ölmek'],
   disability: ['engellilik', 'engel'],
   discovery: ['keşif'],
   'drop out of': ['(okulu) bırakmak', 'bırakmak'],
-  'eatina disorder': ['yeme bozukluğu', 'yeme bozukluğu (eating disorder)'],
+  'eating disorder': ['yeme bozukluğu'],
   education: ['eğitim'],
   embassy: ['elçilik'],
   'equal rights': ['eşit haklar'],
-  expose: ['açığa çıkarmak', 'maruz bırakmak'],
+  expose: ['maruz bırakmak', 'ortaya çıkarmak', 'açığa çıkarmak'],
   fail: ['başarısız olmak', 'başarısızlık'],
   faint: ['bayılmak'],
-  emborrassed: ['utanç duymak', 'utanmış', 'mahcup'],
+  emborrassed: ['utanmış', 'utanç duymak', 'mahcup'],
   responsible: ['sorumlu'],
   forget: ['unutmak'],
   'get a prize': ['ödül almak'],
-  'get rid of': ['kurtulmak', 'başından atmak', 'elden çıkarmak'],
+  'get rid of': ['başından atmak', 'kurtulmak', 'elden çıkarmak'],
   graduate: ['mezun olmak'],
-  'hard conditions': ['Zor şartlar', 'zor koşullar'],
+  'hard conditions': ['zor şartlar', 'zor koşullar'],
   hear: ['duymak'],
-  'herbal medicine': ['bitkisel ilaç', 'bitkisel tıp', 'bitkisel tedavi'],
-  higtorical_events: ['tarihi olaylar', 'tarihî olaylar'],
+  'herbal medicine': ['bitkisel tedavi', 'bitkisel ilaç', 'bitkisel tıp'],
+  'historical events': ['tarihi olaylar', 'tarihî olaylar'],
   'industrial revolution': ['sanayi devrimi'],
-  illiteracy: ['okuryazarlık eksikliği', 'okuryazarlık olmama'],
-  illiterate: ['okur yazar olmayan', 'okuryazar olmayan'],
-  imagination: ['hayal gücü'],
-  inspire: ['İlham vermek'],
+  illiteracy: ['cehalet'],
+  illiterate: ['okuma yazma bilmeyen', 'okur yazar olmayan', 'okuryazar olmayan'],
+  imagination: ['hayal', 'hayal gücü'],
+  inspire: ['ilham vermek'],
   introvert: ['içe dönük', 'içe dönük kişi', 'çekingen'],
   invent: ['icat etmek'],
   'make money': ['para kazanmak'],
   mistake: ['hata'],
   poverty: ['yoksulluk'],
   prescribe: ['reçete yazmak', 'reçetelemek'],
-  'pursue your dreams': ['Hayallerinin peşinden git', 'Hayallerini takip et', 'Hayallerini sürdür'],
+  'pursue your dreams': ['hayallerinin peşinden koşmak','hayallerinin peşinden git', 'hayallerini takip et', 'hayallerini sürdür'],
   racism: ['ırkçılık'],
   receive: ['almak', 'teslim almak'],
   recover: ['iyileşmek', 'toparlanmak'],
@@ -285,12 +285,21 @@ function pickWord() {
 
   const w = keys[index];
   englishEl.textContent = w;
+  // Sıfırla: aside ve mobil ipucu kutularını başlangıç durumuna getir
   hintbox.innerHTML = "<i class='fa-regular fa-lightbulb'></i> İpucu: Kelime gösterilmeden önce ipucu gelmez.";
+  const hintboxMobile = document.getElementById('hintboxMobile');
+  if (hintboxMobile) hintboxMobile.innerHTML = "<i class='fa-regular fa-lightbulb'></i> İpucu: Kelime gösterilmeden önce ipucu gelmez.";
+  // Bu kelime için önceki ipuçlarını sıfırla
+  if (!window.hintReveals) window.hintReveals = {};
+  window.hintReveals[w] = 0;
   answerEl.value = '';
   answerEl.focus();
   feedbackEl.style.display = 'none';
     // (stats removed)
   updateControlsState();
+
+  // Mobilde kalan kelime sayısını güncelle
+  updateMobileRemaining();
 
   return w;
 }
@@ -355,28 +364,37 @@ function checkAnswer() {
 
 function showHint() {
   const word = keys[index];
-    score -= 2; // Her ipucu puan azaltır
-    // (stats removed)
-    const opts = WORDS[word];
-    // En kısa cevabı seçelim
-    const answer = opts.reduce((a, b) => (a.length < b.length ? a : b));
-    // Kaç harf açılacak?
-    const revealCount = Math.ceil(answer.length / 3);
-    // Daha önce açılan harfleri tut
-    if (!window.hintReveals) window.hintReveals = {};
-    if (!window.hintReveals[word]) window.hintReveals[word] = 0;
-    window.hintReveals[word] += revealCount;
-    if (window.hintReveals[word] > answer.length) window.hintReveals[word] = answer.length;
-    // Harfleri göster
-    let revealed = answer
-      .split('')
-      .map((c, i) => (i < window.hintReveals[word] ? c : '_'))
-      .join('');
-    hintbox.innerHTML = `<i class='fa-regular fa-lightbulb'></i> İpucu: ${revealed}`;
-    const hintboxMobile = document.getElementById('hintboxMobile');
-    if (hintboxMobile) {
-      hintboxMobile.innerHTML = `<i class='fa-regular fa-lightbulb'></i> İpucu: ${revealed}`;
-    }
+  console.log('showHint called for word:', word, 'index:', index);
+
+  score -= 2; // Her ipucu puan azaltır
+  console.log('score after hint penalty:', score);
+
+  const opts = WORDS[word];
+  // Her zaman array'daki ilk elemanı ipucu olarak kullan
+  const answer = opts[0];
+  // Kaç harf açılacak?
+  const revealCount = Math.ceil(answer.length / 3);
+  console.log('answer:', answer, 'revealCount:', revealCount);
+
+  // Daha önce açılan harfleri tut
+  if (!window.hintReveals) window.hintReveals = {};
+  if (!window.hintReveals[word]) window.hintReveals[word] = 0;
+  window.hintReveals[word] += revealCount;
+  if (window.hintReveals[word] > answer.length) window.hintReveals[word] = answer.length;
+  console.log('hintReveals for word now:', window.hintReveals[word]);
+
+  // Harfleri göster
+  let revealed = answer
+    .split('')
+    .map((c, i) => (i < window.hintReveals[word] ? c : '_'))
+    .join('');
+  console.log('revealed string:', revealed);
+
+  hintbox.innerHTML = `<i class='fa-regular fa-lightbulb'></i> İpucu: ${revealed}`;
+  const hintboxMobile = document.getElementById('hintboxMobile');
+  if (hintboxMobile) {
+    hintboxMobile.innerHTML = `<i class='fa-regular fa-lightbulb'></i> İpucu: ${revealed}`;
+  }
 }
 
 function goToNextWord() {
@@ -389,6 +407,9 @@ function goToNextWord() {
     showWordListAsModal();
   } else {
     pickWord();
+    // Yeni kelime geldiğinde mobilde ipucu sıfırlansın da zaten pickWord yapıyor,
+    // ayrıca mobil kalan sayıyı güncelle
+    updateMobileRemaining();
   }
 }
 
@@ -404,6 +425,17 @@ function showGameOverState() {
     setActiveMobileMenu('mobileAnalysis');
   }, 500);
 }
+
+// Mobilde kalan kelime sayısını güncelleyen yardımcı fonksiyon
+function updateMobileRemaining() {
+  const el = document.getElementById('mobileRemainingText');
+  if (!el) return;
+  const remaining = Math.max(0, keys.length - index - 1);
+  el.textContent = `Kalan: ${remaining}`;
+}
+
+// Başlangıçta kalan sayıyı ayarla
+updateMobileRemaining();
 
 // ============================================
 // KELIME LİSTESİ UI
