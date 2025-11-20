@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>İngilizce → Türkçe Kelime Oyunu</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="wrap">
+      <!-- Mobile Bottom Bar -->
+      <!-- <nav class="mobile-bottom-bar">
+        <div class="menu-item" id="mobileMenuHome">
+          <i class="fa-solid fa-house"></i>
+          <span>Ana Sayfa</span>
+        </div>
+        <div class="menu-item" id="mobileWordList">
+          <i class="fa-solid fa-list"></i>
+          <span>Kelime Listesi</span>
+        </div>
+        <div class="menu-item" id="mobileAnalysis">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Analiz</span>
+        </div>
+        <div class="menu-item" id="mobileSettings">
+          <i class="fa-solid fa-gear"></i>
+          <span>Ayarlar</span>
+        </div>
+      </nav> -->
+      <header>
+        <div>
+          <h1><i class="fa-solid fa-graduation-cap"></i> İngilizce → Türkçe Kelime Oyunu</h1>
+          <p class="lead">
+            Bir İngilizce kelime gösterilecek. Türkçesini yaz — yakın cevaplar da
+            kabul edilir, büyük/küçük harf fark etmez.
+          </p>
+        </div>
+      </header>
+
+      <div class="game">
+        <div class="card">
+          <div class="word" id="english">pursue your dreams</div>
+
+          <label for="answer">Türkçe Cevabını Yaz:</label>
+          <input id="answer" type="text" autocomplete="off" placeholder="Cevabını yaz ve Enter'a bas..."/>
+
+          <div class="controls">
+            <button id="check"><i class="fa-solid fa-check"></i> Kontrol Et</button>
+            <button id="skip" class="ghost"><i class="fa-solid fa-forward-step"></i> Pas Geç</button>
+            <button id="hint" class="ghost"><i class="fa-regular fa-lightbulb"></i> İpucu</button>
+            <button id="nextBtn" class="ghost" style="display: none">
+              <i class="fa-solid fa-arrow-right"></i> Sonraki
+            </button>
+          </div>
+
+          <div id="feedback" class="result" style="display: none"></div>
+          <!-- Mobilde ipucu kutusu -->
+          <div class="hint hint-mobile" id="hintboxMobile"><i class="fa-regular fa-lightbulb"></i> İpucu: Kelime gösterilmeden önce ipucu gelmez.</div>
+
+          <div style="
+              margin-top: 18px;
+              padding: 14px;
+              background: rgba(96, 165, 250, 0.05);
+              border-radius: 10px;
+              color: var(--muted);
+              font-size: 12px;
+              line-height: 1.6;
+              border-left: 2px solid rgba(96, 165, 250, 0.3);">
+            <div style="margin-bottom: 6px"><strong><i class='fa-regular fa-lightbulb'></i> Not:</strong></div>
+            <div>• Yakın yazımlar da kabul edilir (örnek: "almak" → "buy")</div>
+            <div>• Büyük-küçük harf fark etmez</div>
+            <div>• Birden fazla doğru cevap olabilir</div>
+          </div>
+        </div>
+
+        <aside class="card">
+
+          <div class="row" style="margin-bottom: 14px">
+            <strong style="font-size: 16px"><i class="fa-solid fa-chart-line"></i> İstatistik</strong>
+          </div>
+          <hr style="border: none; height: 1px; background: rgba(255, 255, 255, 0.03); margin: 12px 0" />
+
+          <div class="hint" id="hintbox"><i class="fa-regular fa-lightbulb"></i> İpucu: Kelime gösterilmeden önce ipucu gelmez.</div>
+
+          <div style="margin-top: 16px; padding: 12px; background: rgba(96, 165, 250, 0.05); border-radius: 10px">
+            <label style="margin: 0 0 10px 0"><i class="fa-solid fa-gear"></i> Ayarlar</label>
+            <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap">
+              <label class="auto-next-label">
+                <input type="checkbox" id="autoNext" checked /> Otomatik Sonraki
+              </label>
+            </div>
+          </div>
+
+          <hr style="border: none; height: 1px; background: rgba(255, 255, 255, 0.03); margin: 16px 0" />
+
+          <div style="font-size: 12px; color: var(--muted); margin-bottom: 12px">Oyunun keyfini çıkarmalı!</div>
+          <div style="display: flex; gap: 8px; flex-direction: column">
+            <button id="start" style="width: 100%"><i class="fa-solid fa-play"></i> Başlat</button>
+            <button id="wordListBtn" class="ghost" style="width: 100%"><i class="fa-solid fa-list"></i> Kelimeler Listesi</button>
+            <button id="desktopAnalysisBtn" class="ghost" style="width: 100%"><i class="fa-solid fa-chart-line"></i> Analiz</button>
+          </div>
+        </aside>
+      </div>
+
+      <footer>
+        <div style="margin-bottom: 8px">
+          <strong>Bilgi:</strong> Kullanıcının sağladığı liste düzeltildi (anlaşılır yazım
+          hataları düzeltildi).
+        </div>
+        <div style="font-size: 11px; color: var(--muted)">
+          Belirsiz kelimeler orijinal haliyle bırakıldı. En iyi şekilde öğren!
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mobile Bottom Bar -->
+    <nav class="mobile-bottom-bar">
+      <div class="menu-item" id="mobileMenuHome">
+        <i class="fa-solid fa-house"></i>
+        <span>Ana Sayfa</span>
+      </div>
+      <div class="menu-item" id="mobileWordList">
+        <i class="fa-solid fa-list"></i>
+        <span>Kelimeler</span>
+      </div>
+      <div class="menu-item" id="mobileAnalysis">
+        <i class="fa-solid fa-chart-bar"></i>
+        <span>Analiz</span>
+      </div>
+      <div class="menu-item" id="mobileSettings">
+        <i class="fa-solid fa-gear"></i>
+        <span>Ayarlar</span>
+      </div>
+    </nav>
+
+    <!-- Word List Menu -->
+    <div class="word-list-menu" id="wordListMenu" style="display: none">
+      <div class="word-list-header">
+        <div>Tüm Kelimeler (Alfabetik)</div>
+        <button id="closeWordList" class="ghost" style="padding: 4px 8px; font-size: 16px">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="word-list-container" id="wordListContainer"></div>
+    </div>
+    <!-- Mobile Settings Modal -->
+                <div id="mobileSettingsModal" style="display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:3000;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
+                  <div style="background:var(--card);border-radius:16px;padding:28px 18px;max-width:320px;width:90%;margin:auto;box-shadow:0 8px 32px rgba(2,6,23,0.7);text-align:center;">
+                    <h2 style="font-size:18px;margin-bottom:16px;color:#93c5fd;"><i class="fa-solid fa-gear"></i> Ayarlar</h2>
+                    <label class="auto-next-label" style="margin-bottom:18px;">
+                      <input type="checkbox" id="autoNextModal" /> Otomatik Sonraki
+                    </label>
+                    <button onclick="document.getElementById('mobileSettingsModal').style.display='none'" style="width:100%;margin-top:8px;" class="ghost"><i class="fa-solid fa-xmark"></i> Kapat</button>
+                  </div>
+                </div>
+    <!-- Analysis Screen -->
+    <div class="analysis-screen" id="analysisScreen">
+      <div class="analysis-content">
+        <div class="analysis-header">
+          <i class="fa-solid fa-chart-bar"></i> Oyun Sonucu Analizi
+        </div>
+        <div style="display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;">
+
+          <div class="stat-card">
+            <div class="stat-label">Toplam Skor</div>
+            <div class="stat-value" id="finalScore">0</div>
+          </div>
+          <div class="stat-card" style="
+              background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+              border-color: rgba(34, 197, 94, 0.3);">
+            <div class="stat-label">Doğru Cevap</div>
+            <div class="stat-value" id="analysisCorrect" style="color: var(--success)">0</div>
+          </div>
+          <div class="stat-card" style="
+              background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+              border-color: rgba(239, 68, 68, 0.3);">
+            <div class="stat-label">Yanlış Cevap</div>
+            <div class="stat-value" id="analysiswrong" style="color: var(--danger)">0</div>
+          </div>
+          <div class="stat-card" style="
+              background: linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(148, 163, 184, 0.05));
+              border-color: rgba(148, 163, 184, 0.3);">
+            <div class="stat-label">Pas Geçilen</div>
+            <div class="stat-value" id="analysisSkipped" style="color: var(--muted)">0</div>
+          </div>
+        </div>
+        <div id="analysisContainer" class="analysis-grid"></div>
+        <div style="margin-top: 24px; display: flex; gap: 8px">
+          <button id="closeAnalysis" style="flex: 1"><i class="fa-solid fa-xmark"></i> Kapat</button>
+          <button id="restartFromAnalysis" style="flex: 1">
+            <i class="fa-solid fa-rotate-right"></i> Yeniden Başla
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
